@@ -1,0 +1,82 @@
+{
+  "id": "03a43af8-1cc1-4e69-9d66-426f27c73cf3",
+  "user_id": "b182f90d-75c1-5b59-bff7-32775ab62be3",
+  "name": "test",
+  "description": "1",
+  "created_at": "2026-01-03T01:10:09.438495",
+  "updated_at": "2026-01-03T17:42:59.362380",
+  "file_count": 5,
+  "status": "active",
+  "files": [
+    {
+      "id": "94e64f46-5320-4e3e-81c2-a7898f185b5d",
+      "name": "ResponseLetter-3.docx",
+      "original_name": "ResponseLetter-3.docx",
+      "size": 318546,
+      "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "uploaded_at": "2026-01-03T17:39:43.669403",
+      "file_path": "/home/guan/work/ATM/academic-searcher/storage/user_files/b182f90d-75c1-5b59-bff7-32775ab62be3/knowledge_bases/03a43af8-1cc1-4e69-9d66-426f27c73cf3/files/ResponseLetter-3.docx",
+      "relative_path": "files/ResponseLetter-3.docx",
+      "status": "completed",
+      "chunk_count": 14,
+      "has_summary": true,
+      "progress": 100
+    },
+    {
+      "id": "91796b26-bf6b-4ef1-9f97-de55d9850059",
+      "name": "专利模板.md",
+      "original_name": "专利模板.md",
+      "size": 4863,
+      "type": "application/octet-stream",
+      "uploaded_at": "2026-01-03T17:40:09.135980",
+      "file_path": "/home/guan/work/ATM/academic-searcher/storage/user_files/b182f90d-75c1-5b59-bff7-32775ab62be3/knowledge_bases/03a43af8-1cc1-4e69-9d66-426f27c73cf3/files/专利模板.md",
+      "relative_path": "files/专利模板.md",
+      "status": "completed",
+      "chunk_count": 1,
+      "has_summary": true,
+      "progress": 100
+    },
+    {
+      "id": "d7b7c1bd-86cc-418c-a780-2ca83ae8302c",
+      "name": "一种基于可学习语义蒸馏与分层残差量化的心电压缩方法及系统.docx",
+      "original_name": "一种基于可学习语义蒸馏与分层残差量化的心电压缩方法及系统.docx",
+      "size": 464123,
+      "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "uploaded_at": "2026-01-03T17:40:09.256177",
+      "file_path": "/home/guan/work/ATM/academic-searcher/storage/user_files/b182f90d-75c1-5b59-bff7-32775ab62be3/knowledge_bases/03a43af8-1cc1-4e69-9d66-426f27c73cf3/files/一种基于可学习语义蒸馏与分层残差量化的心电压缩方法及系统.docx",
+      "relative_path": "files/一种基于可学习语义蒸馏与分层残差量化的心电压缩方法及系统.docx",
+      "status": "completed",
+      "chunk_count": 6,
+      "has_summary": true,
+      "progress": 100
+    },
+    {
+      "id": "73772d2c-df37-4fc6-86fc-a076d06f2d10",
+      "name": "magma.pdf",
+      "original_name": "magma.pdf",
+      "size": 39002220,
+      "type": "application/pdf",
+      "uploaded_at": "2026-01-03T17:40:43.247699",
+      "file_path": "/home/guan/work/ATM/academic-searcher/storage/user_files/b182f90d-75c1-5b59-bff7-32775ab62be3/knowledge_bases/03a43af8-1cc1-4e69-9d66-426f27c73cf3/files/magma.pdf",
+      "relative_path": "files/magma.pdf",
+      "status": "completed",
+      "chunk_count": 102,
+      "has_summary": true,
+      "progress": 100
+    },
+    {
+      "id": "ff8321a4-db0a-4462-abfe-774b6b02f4e0",
+      "name": "Lumine.pdf",
+      "original_name": "Lumine.pdf",
+      "size": 47432625,
+      "type": "application/pdf",
+      "uploaded_at": "2026-01-03T17:41:10.986956",
+      "file_path": "/home/guan/work/ATM/academic-searcher/storage/user_files/b182f90d-75c1-5b59-bff7-32775ab62be3/knowledge_bases/03a43af8-1cc1-4e69-9d66-426f27c73cf3/files/Lumine.pdf",
+      "relative_path": "files/Lumine.pdf",
+      "status": "completed",
+      "chunk_count": 143,
+      "has_summary": true,
+      "progress": 100
+    }
+  ]
+}

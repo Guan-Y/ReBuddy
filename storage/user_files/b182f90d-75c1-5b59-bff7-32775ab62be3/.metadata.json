@@ -1,0 +1,34 @@
+[
+  {
+    "id": "root",
+    "name": "我的文件",
+    "type": "folder",
+    "path": "",
+    "children": [
+      {
+        "id": "file_5a8c5ac0",
+        "name": "Emu3_Next-Token_Prediction_is_All_You_Need.pdf",
+        "type": "file",
+        "path": "//Emu3_Next-Token_Prediction_is_All_You_Need.pdf",
+        "size": 16706911,
+        "upload_time": "2025-12-16T22:42:35.095505"
+      },
+      {
+        "id": "file_5f169bad",
+        "name": "An_Image_is_Worth_32_Tokens_for_Reconstruction_and_Generation_1.pdf",
+        "type": "file",
+        "path": "//An_Image_is_Worth_32_Tokens_for_Reconstruction_and_Generation_1.pdf",
+        "size": 6034975,
+        "upload_time": "2025-12-18T21:28:41.697358"
+      },
+      {
+        "id": "file_f5408196",
+        "name": "BLIP3-o.pdf",
+        "type": "file",
+        "path": "//BLIP3-o.pdf",
+        "size": 3557005,
+        "upload_time": "2025-12-18T21:33:29.152774"
+      }
+    ]
+  }
+]
