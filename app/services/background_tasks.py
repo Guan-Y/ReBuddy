@@ -338,17 +338,18 @@ def run_async_log(message: str, status: str):
     get_async_task_manager().submit_task(log_task)
 
 
-async def process_pdf_full_async(pdf_path: str, file_id: str, kb_id: str, user_id: str):
+async def process_pdf_full_async(pdf_path: str, file_id: str, kb_id: str, user_id: str, enable_llm_analysis: bool = False):
     """
-    完整的 PDF 异步处理任务（包含文本提取、向量化、LLM分析）
+    完整的 PDF 异步处理任务（包含文本提取、向量化、可选LLM分析）
     - 第一阶段：提取文本、添加原文到向量库
-    - 第二阶段：LLM分析、添加摘要到向量库
+    - 第二阶段：LLM分析、添加摘要到向量库（可选，默认关闭）
 
     Args:
         pdf_path: PDF 文件路径
         file_id: 文件ID
         kb_id: 知识库ID
         user_id: 用户ID
+        enable_llm_analysis: 是否启用 LLM 分析（默认 False）
     """
     from app.services.knowledgebase_service import get_user_knowledge_base_service
     from app.core.pdf_parser import process_pdf_for_knowledge_base, analyze_and_add_summary
@@ -362,12 +363,13 @@ async def process_pdf_full_async(pdf_path: str, file_id: str, kb_id: str, user_i
             kb_service.update_file_status(kb_id, file_id, "processing", progress=30)
             print(f"📄 开始处理 PDF: {file_id}")
 
-            # 提取文本并添加原文到向量库
+            # 提取文本并添加原文到向量库（使用快速模式）
             result = process_pdf_for_knowledge_base(
                 pdf_path=pdf_path,
                 file_id=file_id,
                 kb_id=kb_id,
-                user_id=user_id
+                user_id=user_id,
+                use_fast=True  # 强制使用 pypdfplumber 快速解析
             )
 
             if result['status'] == 'success':
@@ -402,57 +404,68 @@ async def process_pdf_full_async(pdf_path: str, file_id: str, kb_id: str, user_i
             print(f"❌ PDF 文本处理异常: {file_id} - {e}")
             return
 
-        # 第二阶段：LLM 分析
-        try:
-            # 更新状态为 analyzing
-            kb_service.update_file_status(kb_id, file_id, "analyzing", progress=70)
-            print(f"🤖 开始 LLM 分析: {file_id}")
+        # 第二阶段：LLM 分析（可选，默认关闭）
+        if enable_llm_analysis:
+            try:
+                # 更新状态为 analyzing
+                kb_service.update_file_status(kb_id, file_id, "analyzing", progress=70)
+                print(f"🤖 开始 LLM 分析: {file_id}")
 
-            # 提取 PDF 内容（用于 LLM 分析）
-            from app.config import Config
-            user_paths = Config.get_user_paths(user_id)
-            output_dir = user_paths['parsed_papers_path']
+                # 提取 PDF 内容（用于 LLM 分析）
+                from app.config import Config
+                user_paths = Config.get_user_paths(user_id)
+                output_dir = user_paths['parsed_papers_path']
 
-            from app.core.pdf_parser import process_pdf
-            pdf_content = process_pdf(pdf_path, output_dir)
+                from app.core.pdf_parser import process_pdf
+                pdf_content = process_pdf(pdf_path, output_dir)
 
-            # 异步调用 LLM 分析并添加摘要
-            summary_result = await analyze_and_add_summary(
-                pdf_content=pdf_content,
-                file_id=file_id,
-                kb_id=kb_id,
-                user_id=user_id
-            )
-
-            if summary_result['status'] == 'success':
-                # 更新状态为 completed
-                kb_service.update_file_status(
-                    kb_id,
-                    file_id,
-                    "completed",
-                    has_summary=True,
-                    progress=100
+                # 异步调用 LLM 分析并添加摘要
+                summary_result = await analyze_and_add_summary(
+                    pdf_content=pdf_content,
+                    file_id=file_id,
+                    kb_id=kb_id,
+                    user_id=user_id
                 )
-                print(f"✅ PDF 完整处理完成: {file_id}")
-            else:
-                # 分析失败（但文档仍然可用）
+
+                if summary_result['status'] == 'success':
+                    # 更新状态为 completed
+                    kb_service.update_file_status(
+                        kb_id,
+                        file_id,
+                        "completed",
+                        has_summary=True,
+                        progress=100
+                    )
+                    print(f"✅ PDF 完整处理完成: {file_id}")
+                else:
+                    # 分析失败（但文档仍然可用）
+                    kb_service.update_file_status(
+                        kb_id,
+                        file_id,
+                        "ready",  # 保持 ready 状态，文档可用
+                        message=f"LLM分析失败: {summary_result.get('message')}"
+                    )
+                    print(f"⚠️ LLM 分析失败: {file_id} - {summary_result.get('message')}")
+
+            except Exception as e:
+                # 异常处理（但文档仍然可用）
                 kb_service.update_file_status(
                     kb_id,
                     file_id,
                     "ready",  # 保持 ready 状态，文档可用
-                    message=f"LLM分析失败: {summary_result.get('message')}"
+                    message=f"LLM分析异常: {str(e)}"
                 )
-                print(f"⚠️ LLM 分析失败: {file_id} - {summary_result.get('message')}")
-
-        except Exception as e:
-            # 异常处理（但文档仍然可用）
+                print(f"❌ LLM 分析异常: {file_id} - {e}")
+        else:
+            # LLM 分析已跳过，直接标记为 completed
             kb_service.update_file_status(
                 kb_id,
                 file_id,
-                "ready",  # 保持 ready 状态，文档可用
-                message=f"LLM分析异常: {str(e)}"
+                "completed",
+                has_summary=False,
+                progress=100
             )
-            print(f"❌ LLM 分析异常: {file_id} - {e}")
+            print(f"✅ PDF 处理完成（已跳过 LLM 分析）: {file_id}")
 
     except Exception as e:
         # 整体异常处理
@@ -480,13 +493,14 @@ async def process_pdf_async(pdf_path: str, file_id: str, kb_id: str, user_id: st
     Note: 此函数已废弃，请使用两阶段处理方式
     """
     try:
-        # 1. 同步处理：提取文本并添加原文
+        # 1. 同步处理：提取文本并添加原文（使用快速模式）
         from app.core.pdf_parser import process_pdf_for_knowledge_base
         result = process_pdf_for_knowledge_base(
             pdf_path=pdf_path,
             file_id=file_id,
             kb_id=kb_id,
-            user_id=user_id
+            user_id=user_id,
+            use_fast=True  # 强制使用 pypdfplumber 快速解析
         )
 
         if result['status'] == 'success':

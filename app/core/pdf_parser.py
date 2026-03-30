@@ -222,11 +222,16 @@ def save_image(page, xref, output_dir, page_num, img_idx):
         return None
 
 
-def process_pdf(pdf_path: str, output_dir: str = Config.PARSED_PAPERS_PATH) -> Dict:
+def process_pdf(pdf_path: str, output_dir: str = Config.PARSED_PAPERS_PATH, max_pages: int = 500) -> Dict:
     """
     处理 PDF：提取文本、保存图片、保存表格
     对于 md、docx、csv、xlsx 和 txt 文件直接提取文本内容
     返回字典包含：full_text, image_paths, table_paths
+    
+    Args:
+        pdf_path: PDF 文件路径
+        output_dir: 输出目录
+        max_pages: 最大处理页数（默认500页，防止超大PDF卡死）
     """
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"文件未找到: {pdf_path}")
@@ -243,6 +248,13 @@ def process_pdf(pdf_path: str, output_dir: str = Config.PARSED_PAPERS_PATH) -> D
     
     # 否则使用 PyMuPDF 解析 PDF
     doc = fitz.open(pdf_path)
+    total_pages = len(doc)
+    print(f"📄 PDF 共 {total_pages} 页")
+    
+    # 限制处理页数，防止超大 PDF 卡死
+    if total_pages > max_pages:
+        print(f"⚠️ PDF 页数过多 ({total_pages} > {max_pages})，只处理前 {max_pages} 页")
+        total_pages = max_pages
     
     # 准备输出目录
     
@@ -259,13 +271,19 @@ def process_pdf(pdf_path: str, output_dir: str = Config.PARSED_PAPERS_PATH) -> D
     extracted_tables = []
     
     print(f"📂 正在解析 PDF 内容及资产，输出目录: {assets_dir}")
+    print(f"⚙️ 处理模式: 文本+表格(限时)")
 
-    for page_num, page in enumerate(doc):
+    for page_num in range(total_pages):
+        page = doc[page_num]
         # 1. 提取基础文本
         page_text = page.get_text()
         
-        # 2. 提取并保存图片
+        # 2. 提取并保存图片（限制每页最多5张，防止内存溢出）
         image_list = page.get_images(full=True)
+        if len(image_list) > 5:
+            print(f"⚠️ 第 {page_num+1} 页图片过多 ({len(image_list)} 张)，只处理前 5 张")
+            image_list = image_list[:5]
+        
         for img_idx, img in enumerate(image_list):
             xref = img[0]
             img_path = save_image(page, xref, images_dir, page_num, img_idx)
@@ -274,9 +292,13 @@ def process_pdf(pdf_path: str, output_dir: str = Config.PARSED_PAPERS_PATH) -> D
                 # 在文本中插入标记，告诉 LLM 这里有张图
                 page_text += f"\n[Image Extracted: {os.path.basename(img_path)}]\n"
 
-        # 3. 提取表格
+        # 3. 提取表格（添加简单的超时保护）
         try:
-            tables = page.find_tables()
+            # 对于复杂表格，find_tables 可能很慢，添加页数限制
+            if page_num < 100:  # 只在前 100 页提取表格
+                tables = page.find_tables()
+            else:
+                tables = []
             if tables:
                 for tab_idx, table in enumerate(tables):
                     table_data = table.extract()
@@ -686,7 +708,7 @@ def process_pdf_for_knowledge_base(
     user_id: str,
     output_dir: str = None,
     use_unstructured: bool = False,
-    use_fast: bool = False,
+    use_fast: bool = True,
     use_paddle_unstructured: bool = False,
     use_ppstructure: bool = False
 ) -> Dict:
@@ -703,10 +725,10 @@ def process_pdf_for_knowledge_base(
         kb_id: 知识库ID
         user_id: 用户ID
         output_dir: 输出目录
-        use_unstructured: 是否使用 unstructured 智能解析（默认 True）
-        use_fast: 是否使用 pypdfplumber 快速解析模式（默认 False）
+        use_unstructured: 是否使用 unstructured 智能解析（默认 False）
+        use_fast: 是否使用 pypdfplumber 快速解析模式（默认 True，最快最省资源）
         use_paddle_unstructured: 是否使用 PaddleOCR + unstructured 元素类混合方案（推荐，默认 False）
-        use_ppstructure: PaddleOCR 模式下是否使用 PP-Structure 进行表格识别（默认 True）
+        use_ppstructure: PaddleOCR 模式下是否使用 PP-Structure 进行表格识别（默认 False）
 
     Returns:
         {'status': 'success', 'full_text': ..., 'chunk_count': ..., 'images': ..., 'tables': ..., 'elements': ..., 'structured_info': ...}

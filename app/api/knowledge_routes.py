@@ -93,7 +93,11 @@ async def get_knowledge_base_files(kb_id: str):
 
 
 @router.post("/knowledge/base/{kb_id}/upload", response_model=KnowledgeBaseResponse)
-async def upload_file_to_knowledge_base(kb_id: str, file: UploadFile = File(...)):
+async def upload_file_to_knowledge_base(
+    kb_id: str, 
+    file: UploadFile = File(...),
+    enable_llm_analysis: bool = False
+):
     """上传文件到知识库（快速返回，异步处理）"""
     try:
         # 1. 获取当前用户ID
@@ -135,14 +139,15 @@ async def upload_file_to_knowledge_base(kb_id: str, file: UploadFile = File(...)
         file_ext = Path(file.filename).suffix.lower()
 
         if file_ext in supported_extensions:
-            # 异步处理：文本提取 + 向量化 + LLM分析
+            # 异步处理：文本提取 + 向量化 + 可选LLM分析（默认关闭）
             from app.services.background_tasks import process_pdf_full_async
             import asyncio
             asyncio.create_task(process_pdf_full_async(
                 pdf_path=str(file_path),
                 file_id=file_record['id'],
                 kb_id=kb_id,
-                user_id=user_id
+                user_id=user_id,
+                enable_llm_analysis=enable_llm_analysis
             ))
         else:
             # 不支持的文件类型，直接标记为 ready

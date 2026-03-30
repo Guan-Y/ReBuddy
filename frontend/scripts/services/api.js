@@ -63,10 +63,11 @@ export const api = {
         const res = await fetch(`${BASE_URL}/knowledge/base/${kbId}/files`, { headers: headers() });
         return res.json();
     },
-    uploadFileToKnowledgeBase: async (kbId, file) => {
+    uploadFileToKnowledgeBase: async (kbId, file, enableLLMAnalysis = false) => {
         const formData = new FormData();
         formData.append('file', file);
-        return fetch(`${BASE_URL}/knowledge/base/${kbId}/upload`, {
+        const url = `${BASE_URL}/knowledge/base/${kbId}/upload?enable_llm_analysis=${enableLLMAnalysis}`;
+        return fetch(url, {
             method: 'POST',
             headers: headers(true), // 不设置Content-Type，让FormData自动处理
             body: formData

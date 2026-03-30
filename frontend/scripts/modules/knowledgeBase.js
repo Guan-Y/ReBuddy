@@ -1622,12 +1622,21 @@ class KnowledgeBaseManager {
             return;
         }
         
+        // 获取 LLM 分析开关状态
+        const enableLLMAnalysisCheckbox = document.getElementById('enableLLMAnalysis');
+        const enableLLMAnalysis = enableLLMAnalysisCheckbox ? enableLLMAnalysisCheckbox.checked : false;
+        console.log(`🤖 LLM 分析: ${enableLLMAnalysis ? '开启' : '关闭'}`);
+        
         // 显示上传进度
         this.showUploadProgress(file.name);
         
         try {
             // 使用知识库API上传文件
-            const result = await api.uploadFileToKnowledgeBase(this.currentKnowledgeBase.id, file);
+            const result = await api.uploadFileToKnowledgeBase(
+                this.currentKnowledgeBase.id, 
+                file,
+                enableLLMAnalysis
+            );
             
             if (result && result.status === 'success') {
                 this.showSuccessToast(`文件 "${file.name}" 上传成功`);
