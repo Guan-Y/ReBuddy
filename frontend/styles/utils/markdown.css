@@ -1,0 +1,63 @@
+/* =========================================
+   Markdown 内容深度优化
+   ========================================= */
+.markdown-content {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: block;
+}
+
+/* 标题 */
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
+    margin-top: 1.2em; margin-bottom: 0.6em; font-weight: 700; color: #2c3e50; line-height: 1.4;
+}
+.markdown-content h1 { font-size: 1.6em; border-bottom: 2px solid #eaecef; padding-bottom: 0.3em; }
+.markdown-content h2 { font-size: 1.4em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+
+/* 列表与引用 */
+.markdown-content ul, .markdown-content ol { padding-left: 24px; margin-bottom: 1em; }
+.markdown-content li { margin-bottom: 0.4em; }
+.markdown-content blockquote {
+    margin: 1em 0; padding: 0.5em 1em; color: #57606a; background-color: #f8f9fa;
+    border-left: 4px solid var(--primary-color); border-radius: 0 4px 4px 0;
+}
+
+/* 表格优化 */
+.markdown-content table {
+    display: block; width: 90%; overflow-x: auto; border-collapse: collapse;
+    margin: 1.2em 0; font-size: 14px; background-color: #fff; border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.markdown-content th, .markdown-content td {
+    border: 1px solid #dfe2e5; padding: 10px 14px; text-align: left; min-width: 100px;
+}
+.markdown-content th { background-color: #f6f8fa; font-weight: 600; color: #24292e; }
+.markdown-content tr:nth-child(2n) { background-color: #fcfcfc; }
+
+/* 代码块优化 */
+.markdown-content pre {
+    display: block; width: 90%; max-width: 90%; overflow-x: auto;
+    background-color: #282c34; padding: 16px; border-radius: 8px;
+    margin-bottom: 1.2em; color: #abb2bf; font-family: 'Fira Code', 'Consolas', monospace;
+}
+.markdown-content code {
+    font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.9em;
+    padding: 0.2em 0.4em; background-color: rgba(27,31,35,0.05);
+    border-radius: 3px; color: #d63384;
+}
+.markdown-content pre code {
+    background-color: transparent; color: inherit; padding: 0; font-size: 13px; white-space: pre;
+}
+.markdown-content a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
+.markdown-content a:hover { text-decoration: underline; }
+
+/* 物理光标 */
+.inline-cursor {
+    display: inline-block; vertical-align: text-bottom; margin-left: 2px;
+    color: var(--primary-color); font-weight: bold; animation: blink 1s step-start infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }

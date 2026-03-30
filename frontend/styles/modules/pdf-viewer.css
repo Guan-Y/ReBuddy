@@ -1,0 +1,139 @@
+.pdf-viewer {
+    display: none; flex: 1; flex-direction: row; background: #fff; height: 100%;
+    box-sizing: border-box;
+}
+.pdf-viewer.active {
+    display: flex !important; position: fixed !important; top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1000 !important; width: 100vw !important; height: 100vh !important;
+}
+
+.pdf-display-area {
+    flex: 0 0 70%; display: flex; flex-direction: column; border-right: none;
+    transition: flex 0.3s ease;
+    max-width: 80%;
+    min-width: 30%;
+}
+.pdf-display-area.sidebar-collapsed {
+    flex: 0 0 calc(100% - 40px); /* 只保留对话区最小宽度 */
+}
+
+.pdf-header {
+    display: flex; justify-content: space-between; padding: 8px 16px; background: #fff;
+    border-bottom: none; font-weight: 600; color: var(--primary-color);
+}
+.pdf-left-section { display: flex; align-items: center; gap: 12px; }
+.pdf-toggle-btn {
+    background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-primary);
+    padding: 4px; border-radius: 4px; transition: background 0.2s;
+}
+.pdf-toggle-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+#pdfFileName { font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0; padding: 0; }
+.paper-status {
+    display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--primary-color);
+    background: rgba(102, 126, 234, 0.1); padding: 4px 8px; border-radius: 12px; white-space: nowrap;
+}
+.paper-status-dot { width: 6px; height: 6px; background: var(--primary-color); border-radius: 50%; flex-shrink: 0; }
+.pdf-close-btn {
+    background: #ff4757; color: #fff; border: none; padding: 6px 16px;
+    border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 600;
+}
+.pdf-frame { flex: 1; width: 100%; border: none; background: #f5f5f5; }
+
+/* 可拖拽调整条 */
+.pdf-resizer {
+    width: 4px; background: #e0e0e0; cursor: col-resize; position: relative;
+    transition: background 0.2s;
+}
+.pdf-resizer:hover {
+    background: var(--primary-color);
+}
+.pdf-resizer::before {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 20px; height: 40px; background: rgba(102, 126, 234, 0.1); border-radius: 4px;
+}
+
+/* 论文对话区域 */
+.paper-chat-area {
+    flex: 0 0 30%; display: flex; flex-direction: column; background: var(--grad);
+    transition: flex 0.3s ease;
+    max-width: 70%;
+    min-width: 40px;
+}
+.paper-chat-header { 
+    padding: 14px 16px; background: var(--grad); color: #fff; flex-shrink: 0;
+    display: flex; align-items: center; gap: 8px; position: relative;
+}
+
+/* PDF对话功能开关 */
+.pdf-switches-bar {
+    display: flex; align-items: center; justify-content: flex-start; gap: 15px; 
+    padding: 2px 16px 2px 16px; background: #fff;
+    border-top: none;
+}
+
+.pdf-switches-bar .switch {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    padding: 8px 16px;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+}
+
+.pdf-switches-bar .switch span {
+    font-size: 13px;
+    color: #667eea;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.pdf-switches-bar .switch.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.pdf-switches-bar .switch.active span {
+    color: #fff;
+    font-weight: 600;
+}
+
+.pdf-switches-bar .switch:hover {
+    transform: translateY(-1px);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    background: rgba(255, 255, 255, 1);
+}
+.chat-toggle-btn {
+    background: rgba(255, 255, 255, 0.2); border: none; color: #fff;
+    width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; font-size: 14px;
+    position: relative; z-index: 10; pointer-events: auto;
+    flex-shrink: 0;
+}
+.chat-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+.paper-chat-messages { flex: 1; overflow-y: auto; padding: 16px; background: #fff; }
+
+/* 覆写：论文对话气泡允许更宽 */
+.paper-chat-messages .message-bubble { max-width: 90%; font-size: 14px; }
+
+.paper-input-container {
+    display: flex; padding: 12px 16px; background: #fff; border-top: none; gap: 8px; flex-shrink: 0;
+}
+.paper-chat-input { flex: 1; padding: 10px 14px; border: 1px solid #ddd; border-radius: 20px; font-size: 14px; outline: none; }
+.paper-send-button {
+    padding: 10px 20px; background: var(--grad); color: #fff; border: none;
+    border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+    .pdf-display-area { width: 60%; }
+    .paper-chat-area { width: 40%; }
+}

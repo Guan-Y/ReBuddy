@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学术搜索系统 - 用户登录</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .login-header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .login-body {
+            padding: 2rem;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .user-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .user-item {
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .user-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .alert {
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h2>🎓 学术搜索系统</h2>
+            <p class="mb-0">请登录以开始使用</p>
+        </div>
+        
+        <div class="login-body">
+            <div id="loginAlert" class="alert alert-danger d-none" role="alert"></div>
+            
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">用户名</label>
+                    <input type="text" class="form-control" id="username" required 
+                           placeholder="输入用户名（新用户将自动注册）">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="displayName" class="form-label">显示名称（可选）</label>
+                    <input type="text" class="form-control" id="displayName" 
+                           placeholder="输入显示名称">
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        登录 / 注册
+                    </button>
+                </div>
+            </form>
+            
+            <hr class="my-4">
+            
+            <div class="mb-3">
+                <label class="form-label">已有用户</label>
+                <div id="userList" class="user-list">
+                    <div class="text-center text-muted">
+                        <small>正在加载用户列表...</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 页面加载时获取用户列表
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserList();
+        });
+        
+        // 加载用户列表
+        async function loadUserList() {
+            try {
+                const response = await fetch('/api/user/list');
+                const data = await response.json();
+                
+                const userListDiv = document.getElementById('userList');
+                
+                if (data.users && data.users.length > 0) {
+                    userListDiv.innerHTML = data.users.map(user => `
+                        <div class="user-item" onclick="quickLogin('${user.username}')">
+                            <strong>${user.display_name}</strong>
+                            <small class="text-muted d-block">@${user.username}</small>
+                            <small class="text-muted d-block">
+                                最后登录: ${user.last_login ? new Date(user.last_login).toLocaleString() : '从未登录'}
+                            </small>
+                        </div>
+                    `).join('');
+                } else {
+                    userListDiv.innerHTML = '<div class="text-center text-muted"><small>暂无用户</small></div>';
+                }
+            } catch (error) {
+                console.error('加载用户列表失败:', error);
+                document.getElementById('userList').innerHTML = 
+                    '<div class="text-center text-danger"><small>加载失败</small></div>';
+            }
+        }
+        
+        // 快速登录
+        function quickLogin(username) {
+            document.getElementById('username').value = username;
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        }
+        
+        // 登录表单提交
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const displayName = document.getElementById('displayName').value.trim();
+            
+            if (!username) {
+                showError('请输入用户名');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/user/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        display_name: displayName
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // 登录成功，跳转到主页面
+                    window.location.href = '/';
+                } else {
+                    showError(data.error || '登录失败');
+                }
+            } catch (error) {
+                console.error('登录请求失败:', error);
+                showError('网络错误，请重试');
+            }
+        });
+        
+        // 显示错误信息
+        function showError(message) {
+            const alertDiv = document.getElementById('loginAlert');
+            alertDiv.textContent = message;
+            alertDiv.classList.remove('d-none');
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                alertDiv.classList.add('d-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

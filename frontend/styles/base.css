@@ -1,0 +1,51 @@
+/* CSS变量 */
+:root {
+    --side-width: 220px;
+    --grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --radius: 14px;
+    --bg: #ffffff;
+    --bg-light: #f8f9fa;
+    --bg-tertiary: #f1f3f4;
+    --border-color: #dee2e6;
+    --primary-color: #667eea;
+    --text-primary: #2c3e50;
+    --text-secondary: #495057;
+    --text-muted: #6c757d;
+}
+
+/* 全局 Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    background: var(--grad);
+    overflow: hidden;
+}
+
+/* App 骨架容器 */
+.wrap {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 1);
+    display: flex;
+    overflow: hidden;
+}
+
+/* 主内容区域 */
+.chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-width: 0;
+    height: 100vh;
+    background: var(--bg);
+}
+
+/* 响应式基础 */
+@media (max-width: 1280px) {
+    .wrap { width: 100%; }
+    :root { --papers-width: 320px; }
+}

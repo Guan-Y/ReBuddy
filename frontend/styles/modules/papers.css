@@ -1,0 +1,546 @@
+/* 主内容区 */
+.main-content {
+    flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0;
+    height: 100vh;
+}
+
+/* 论文展示页面 */
+.papers-view {
+    flex: 1; display: flex; flex-direction: column; height: 100vh;
+    background: var(--bg-light);
+    position: relative;
+}
+
+/* Container A: 首屏英雄区 */
+.hero-section {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+    background: var(--bg-light);
+    background-attachment: fixed;
+}
+
+/* 欢迎语 */
+.welcome-headline {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.welcome-headline h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    animation: fadeInUp 0.8s ease-out;
+    background: linear-gradient(45deg, #667eea, #f093fb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 英雄区功能开关组 */
+.hero-switches {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.hero-switches .switch {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    padding: 12px 20px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #667eea;
+    font-weight: 600;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.hero-switches .switch:hover {
+    transform: translateY(-2px);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    background: rgba(255, 255, 255, 1);
+}
+
+.hero-switches .switch.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+/* 英雄区输入容器 */
+.hero-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 600px;
+    width: 100%;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.hero-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 30px;
+    padding: 8px 20px; /* 恢复正常padding */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.hero-input-wrapper:hover {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.hero-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 12px 0; /* 恢复正常padding */
+    font-size: 16px;
+    outline: none;
+    color: #333;
+}
+
+.hero-input::placeholder {
+    color: #999;
+}
+
+/* 按钮容器，用于控制按钮位置 */
+.hero-buttons-container {
+    display: flex;
+    gap: 12px;
+    margin-left: auto; /* 让按钮靠右 */
+}
+
+.hero-send-button {
+    background: var(--grad);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    height: 44px; /* 统一高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-send-button:hover {
+    transform: scale(1.05);
+}
+
+/* Container B: 内容流区域 */
+.content-feed-section {
+    background: var(--bg-light);
+    padding: -10px 20px 40px 20px; /* 调整底部间距 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content-feed-section .papers-header {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 30px; /* 增加与下方论文卡片的间距 */
+    text-align: center;
+}
+
+.content-feed-section .papers-grid {
+    width: 100%;
+    max-width: 1200px;
+}
+
+
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.sticky-panel .send-button:hover {
+    transform: scale(1.05);
+}
+
+.sticky-panel .chat-entry-btn-small {
+    height: 32px; /* 减小高度 */
+    font-size: 12px;
+    padding: 6px 12px;
+}
+
+/* 动画 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 欢迎语文字渐变效果 */
+.welcome-headline h1 {
+    background: linear-gradient(45deg, #667eea, #f093fb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 输入框聚焦效果 */
+.hero-input:focus {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+/* 开关按钮增强效果 */
+.hero-switches .switch,
+.sticky-panel .switch {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-switches .switch::before,
+.sticky-panel .switch::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.hero-switches .switch:active::before,
+.sticky-panel .switch:active::before {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+/* 论文卡片增强悬停效果 */
+.paper-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.paper-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.paper-card:hover::before {
+    left: 100%;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .welcome-headline h1 {
+        font-size: 32px;
+    }
+    
+    .hero-switches {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .hero-input-container {
+        flex-direction: column;
+        padding: 16px;
+    }
+    
+    .hero-send-button {
+        width: 100%;
+    }
+    
+    .sticky-panel {
+        padding: 12px 16px;
+    }
+    
+    .sticky-panel .switches-bar {
+        gap: 8px;
+    }
+    
+    .sticky-panel .switch {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        min-height: 70vh;
+        padding: 20px 16px;
+    }
+    
+    .welcome-headline h1 {
+        font-size: 24px;
+    }
+    
+    .hero-input-container {
+        max-width: 100%;
+    }
+}
+
+/* 关键词区域 */
+.keywords-section { 
+    display: flex; flex-direction: column; gap: 10px; align-items: center;
+    border: none; /* 确保没有边框 */
+}
+.keywords-input { 
+    width: 100%; max-width: 400px; padding: 8px 12px; border: 1px solid rgba(0, 0, 0, 0.1); 
+    border-radius: 20px; font-size: 14px; outline: none; background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+}
+.keywords-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, .2);
+}
+
+.keyword-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.keyword-tag {
+    background: var(--grad); color: #fff; padding: 4px 10px; border-radius: 20px;
+    font-size: 12px; display: inline-flex; align-items: center; gap: 4px;
+    cursor: pointer;
+}
+
+/* 网格布局中的论文卡片 */
+.paper-card {
+    background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 12px;
+    padding: 10px; cursor: pointer; transition: all .2s; height: 200px;
+    display: flex; flex-direction: column; position: relative;
+    backdrop-filter: blur(10px);
+}
+.paper-card:hover { 
+    box-shadow: 0 8px 25px rgba(102, 126, 234, .15); 
+    transform: translateY(-3px); 
+    border-color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* 已解析论文卡片 */
+.paper-card.parsed {
+    border-left: 4px solid var(--primary-color);
+}
+
+/* 未解析论文卡片 */
+.paper-card.unparsed {
+    border-left: 4px solid #999;
+    opacity: 0.9;
+}
+
+/* 来源标签 */
+.source-tag {
+    font-size: 10px; padding: 2px 6px; border-radius: 10px; color: #fff;
+    font-weight: 500; margin-left: 8px;
+}
+.source-arxiv { background: #b31b1b; }
+.source-cvpr { background: #0073e6; }
+.source-neurips { background: #ff6b35; }
+.source-iclr { background: #8b5cf6; }
+.source-survey { background: #10b981; }
+.source-book { background: #f59e0b; }
+.source-local { background: var(--primary-color); }
+.paper-title {
+    font-weight: 600; font-size: 14px; color: var(--text-primary); margin-bottom: 6px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    line-height: 1.3; text-align: center;
+}
+.paper-meta { 
+    font-size: 11px; color: #666; 
+    display: flex; justify-content: space-between; 
+    margin-bottom: 6px; padding: 0 10px;
+}
+
+.paper-meta .authors {
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+.paper-abstract {
+    margin-top: auto; padding: 10px; border-top: none;
+    font-size: 11px; color: #444; line-height: 1.3;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
+    overflow: hidden; flex: 1; text-align: left;
+}
+.paper-card.expanded .paper-abstract { display: block; }
+
+/* 操作按钮组 */
+.paper-actions {
+    display: flex; gap: 6px; margin-top: 8px;
+}
+
+.paper-action-btn {
+    padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 12px;
+    background: #fff; color: var(--text-primary); font-size: 10px; cursor: pointer;
+    transition: all .2s; width: 60px; text-align: center;
+}
+
+.paper-action-btn:hover:not(:disabled) {
+    background: var(--grad); color: #fff; border-color: transparent;
+    transform: scale(1.05);
+}
+
+.paper-action-btn.primary {
+    background: var(--grad); color: #fff; border-color: transparent;
+}
+
+.paper-action-btn.primary:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.paper-action-btn.disabled {
+    background: #f5f5f5; color: #999; border-color: #e0e0e0;
+    cursor: not-allowed; opacity: 0.7;
+}
+
+.paper-action-btn.disabled:hover {
+    transform: none;
+    background: #f5f5f5; color: #999; border-color: #e0e0e0;
+}
+
+/* 悬浮提示框 */
+.paper-tooltip {
+    position: fixed; background: #2c3e50; color: #fff; padding: 12px;
+    border-radius: 8px; font-size: 13px; line-height: 1.5; max-width: 360px;
+    display: none; z-index: 1000; box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    pointer-events: none; user-select: none; will-change: transform; transform: translateZ(0);
+}
+.paper-tooltip::after {
+    content: ""; position: absolute; top: 100%; left: 20px;
+    border: 6px solid transparent; border-top-color: #2c3e50;
+}
+
+/* 加载动画容器 */
+.loading-spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    width: 100%;
+    grid-column: 1 / -1; /* 跨所有列 */
+}
+
+/* 加载动画 - 旋转圆环 */
+.loading-spinner {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 16px;
+}
+
+.spinner-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 4px solid transparent;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.spinner-ring:nth-child(1) {
+    animation-delay: -0.45s;
+    border-top-color: #667eea;
+}
+
+.spinner-ring:nth-child(2) {
+    animation-delay: -0.3s;
+    border-top-color: #764ba2;
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+}
+
+.spinner-ring:nth-child(3) {
+    animation-delay: -0.15s;
+    border-top-color: #f093fb;
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+}
+
+.spinner-ring:nth-child(4) {
+    animation-delay: 0s;
+    border-top-color: #f5576c;
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 加载文字 */
+.loading-text {
+    color: #999;
+    font-size: 14px;
+    font-weight: 500;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* 无更多数据提示 */
+.no-more-papers {
+    grid-column: 1 / -1; /* 跨所有列 */
+    text-align: center;
+    color: #999;
+    padding: 40px 20px;
+    font-size: 14px;
+}
+
+/* 加载错误提示 */
+.load-error {
+    grid-column: 1 / -1; /* 跨所有列 */
+    text-align: center;
+    color: #f44336;
+    padding: 40px 20px;
+    font-size: 14px;
+}

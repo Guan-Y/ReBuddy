@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI科研助手</title>
+
+    <!-- 外部依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+
+    <!-- 引入分离的CSS和JS文件 -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+    <div class="wrap">
+        <!-- ===== 左侧：现代化侧边栏 ===== -->
+  <aside class="sidebar" id="sidebar">
+      <!-- 顶部操作区 -->
+      <div class="sidebar-header">
+          <button class="sidebar-toggle" id="sidebarToggle" title="切换侧边栏">
+              <span class="hamburger-icon">☰</span>
+          </button>
+          <div class="sidebar-logo">
+              <span class="logo-icon">🔬</span>
+              <span class="logo-text">ReBuddy</span>
+          </div>
+      </div>
+      
+      <!-- 主要功能区 -->
+      <div class="sidebar-main">
+          <!-- 新对话按钮 -->
+          <button class="primary-btn new-chat-btn" id="newChatBtn" title="开始新对话">
+              <span class="btn-icon">💬</span>
+              <span class="btn-text">新对话</span>
+          </button>
+          
+          <!-- 个人知识库按钮 -->
+          <button class="primary-btn knowledge-btn" id="knowledgeBtn" title="个人知识库">
+              <span class="btn-icon">📚</span>
+              <span class="btn-text">个人知识库</span>
+          </button>
+      </div>
+      
+      <!-- 历史对话列表 -->
+      <div class="sidebar-content">
+          <div class="conversation-history">
+              <div class="history-header">
+                  <span class="history-title">历史对话</span>
+                  <button class="history-clear" id="historyClear" title="删除当前选中的对话">🗑️</button>
+              </div>
+              <div class="history-list" id="historyList">
+                  <!-- 历史对话项将动态生成 -->
+                  <div class="history-item active" data-conversation-id="default">
+                      <div class="history-icon">💬</div>
+                      <div class="history-content">
+                          <div class="history-title">默认对话</div>
+                          <div class="history-preview">你好！我是用于文献调研的 AI 助手...</div>
+                      </div>
+                      <div class="history-time">刚刚</div>
+                  </div>
+              </div>
+          </div>
+          
+          
+      </div>
+  </aside>
+
+        <!-- ===== 右侧：主内容区 ===== -->
+  <main class="chat-area">
+            <!-- 主页：Gemini风格首页（默认显示） -->
+            <div class="papers-view" id="papersView">
+                <!-- Container A: 首屏英雄区 -->
+                <div class="hero-section" id="heroSection">
+                    <!-- 欢迎语 -->
+                    <div class="welcome-headline">
+                        <h1>你好，今天又在写BUG呢？</h1>
+                    </div>
+                    
+                    <!-- 功能开关组 -->
+                    <div class="hero-switches" id="heroSwitches">
+                        <div class="switch" id="switchNetMain">
+                            <span>联网搜索</span>
+                        </div>
+                        <div class="switch" id="switchKbMain">
+                            <span>使用知识库</span>
+                        </div>
+                        <div class="switch" id="switchDeepMain">
+                            <span>深度研究</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 居中对话框 -->
+                    <div class="hero-input-container" id="heroInputContainer">
+                        <div class="hero-input-wrapper">
+                            <input type="text" class="chat-input hero-input" id="chatInputMain" placeholder="输入你的问题...">
+                            <div class="hero-buttons-container">
+                                <button class="send-button hero-send-button" id="sendButtonMain">发送</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Container B: 内容流区域 -->
+                <div class="content-feed-section" id="contentFeedSection">
+                    <!-- 原papers-header内容 -->
+                    <div class="papers-header">
+                        <h2><span class="papers-icon">📚</span> PapersDaily</h2>
+                        <div class="keywords-section">
+                            <input type="text" class="keywords-input" id="keywordsInput" placeholder="输入关键词（回车添加）">
+                            <div class="keyword-tags" id="keywordTags"></div>
+                        </div>
+                    </div>
+                    <div class="papers-grid" id="papersList"></div>
+                </div>
+                
+                
+            </div>
+
+            <!-- 对话页（默认隐藏） -->
+            <div class="chat-view" id="chatView">
+
+                
+
+                <!-- 聊天消息区 -->
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai">
+                        <div class="message-bubble">
+                            <div class="markdown-content">
+                                你好！有何贵干？
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="typingIndicator" class="message ai" style="display: none;">
+                    <div class="message-bubble typing-indicator">
+                        AI 正在思考<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    </div>
+                </div>
+
+                <!-- 底部控制面板 -->
+                <div class="bottom-control-panel">
+                    <!-- 功能开关栏 -->
+                    <div class="switches-bar">
+                        <div class="switch" id="switchNet">
+                            <span>联网搜索</span>
+                        </div>
+                        <div class="switch" id="switchKb">
+                            <span>使用知识库</span>
+                        </div>
+                        <div class="switch" id="switchDeep">
+                            <span>深度研究</span>
+                        </div>
+                    </div>
+
+                    <!-- 输入框 -->
+                    <div class="input-container">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="输入你的问题...">
+                        <button class="send-button" id="sendButton">发送</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDF阅读器模式（默认隐藏） -->
+            <div class="pdf-viewer" id="pdfViewer">
+                <!-- PDF展示区域 -->
+                <div class="pdf-display-area" id="pdfDisplayArea">
+                    <div class="pdf-header">
+                        <div class="pdf-left-section">
+                            <button class="pdf-toggle-btn" id="pdfToggleSidebar" title="切换侧边栏">☰</button>
+                            <span id="pdfFileName">PDF阅读器</span>
+                            <div class="paper-status">
+                                <span class="paper-status-dot"></span>
+                                <span>论文分析模式</span>
+                            </div>
+                        </div>
+                        <div class="pdf-right-section">
+                            <button class="pdf-close-btn" id="pdfCloseBtn">关闭</button>
+                        </div>
+                    </div>
+                    <iframe class="pdf-frame" id="pdfFrame" src=""></iframe>
+                </div>
+                
+                <!-- 可拖拽调整条 -->
+                <div class="pdf-resizer" id="pdfResizer"></div>
+                
+                <!-- 论文对话区域 -->
+                <div class="paper-chat-area" id="paperChatArea">
+                    <div class="paper-chat-header">
+                        <button class="chat-toggle-btn" id="chatToggleBtn" title="折叠/展开对话区">◀</button>
+                        <span>💬 论文对话</span>
+                    </div>
+                    <div class="paper-chat-messages" id="paperChatMessages">
+                        <div class="message ai">
+                            <div class="message-bubble">
+                                <div class="markdown-content">
+                                    双击PDF文件后，我将基于这篇论文的内容与您进行对话。您可以询问关于这篇论文的任何问题！
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PDF对话功能开关 -->
+                    <div class="pdf-switches-bar">
+                        <div class="switch" id="pdfSwitchNet">
+                            <span>联网搜索</span>
+                        </div>
+                        <div class="switch" id="pdfSwitchDeep">
+                            <span>深度研究</span>
+                        </div>
+                    </div>
+                    <div class="paper-input-container">
+                        <input type="text" class="paper-chat-input" id="paperChatInput" placeholder="询问关于这篇论文的问题...">
+                        <button class="paper-send-button" id="paperSendButton">发送</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 知识库集合页面（默认隐藏） -->
+            <div class="knowledge-base-view" id="knowledgeBaseView">
+                <div class="knowledge-base-header">
+                    <button class="back-button" id="knowledgeBackButton">🔬 ← 返回主界面</button>
+                    <h1>📚 个人知识库</h1>
+                    <button class="create-knowledge-btn" id="createKnowledgeBtn">+ 新建知识库</button>
+                </div>
+                <div class="knowledge-grid" id="knowledgeGrid">
+                    <!-- 知识库卡片将动态生成 -->
+                    <div class="knowledge-card" data-kb-id="default">
+                        <div class="card-icon">📁</div>
+                        <div class="card-content">
+                            <h3 class="card-title">默认知识库</h3>
+                            <p class="card-description">系统默认知识库，包含上传的文档</p>
+                            <div class="card-stats">
+                                <span class="stat">📄 5 个文档</span>
+                                <span class="stat">🕐 更新于 2天前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 知识库详情页面（默认隐藏） -->
+            <div class="knowledge-base-detail-view" id="knowledgeBaseDetailView">
+                <div class="detail-header">
+                    <button class="back-button" id="detailBackButton">← 返回知识库列表</button>
+                    <div class="kb-title-section">
+                        <div class="kb-logo">📚</div>
+                        <h2 id="detailTitle">知识库名称</h2>
+                    </div>
+                </div>
+                <div class="detail-layout">
+                    <!-- 左侧：文档列表 -->
+                    <div class="document-list-panel">
+                        <div class="panel-header">
+                            <div class="panel-header-left">
+                                <input type="checkbox" class="select-all-checkbox" id="selectAllCheckbox" title="全选/取消全选">
+                                <h3>📄 文档列表</h3>
+                            </div>
+                        </div>
+                        <div class="document-list" id="documentList">
+                            <!-- 文档项将动态生成 -->
+                        </div>
+                        <div class="document-list-actions">
+                            <button class="small-btn" id="deleteSelectedBtn">删除选中</button>
+                            <button class="small-btn primary" id="uploadFileBtn">📁 上传文件</button>
+                        </div>
+                    </div>
+
+                    <!-- 中间：对话窗口 -->
+                    <div class="chat-panel" id="kbChatPanel">
+                        <div class="chat-header">
+                            <h3>💬 知识库对话</h3>
+                            <div class="chat-switches">
+                                <div class="switch" id="kbSwitchNet">
+                                    <span>联网搜索</span>
+                                </div>
+                                <div class="switch" id="kbSwitchDeep">
+                                    <span>深度研究</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-messages" id="kbChatMessages">
+                            <!-- 复用现有聊天消息结构 -->
+                            <div class="message ai">
+                                <div class="message-bubble">
+                                    <div class="markdown-content">
+                                        你好！我是知识库助手，可以基于选中的文档内容回答您的问题。
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="kbChatInput" placeholder="基于知识库文档提问...">
+                            <button class="send-button" id="kbSendButton">发送</button>
+                            <button class="clear-button" id="kbClearButton" title="清除对话">🗑️</button>
+                        </div>
+                    </div>
+
+                    <!-- 中间：PDF阅读器视图（默认隐藏） -->
+                    <div class="kb-pdf-viewer" id="kbPdfViewer" style="display: none;">
+                        <div class="kb-pdf-display-area" id="kbPdfDisplayArea">
+                            <div class="kb-pdf-header">
+                                <div class="kb-pdf-left-section">
+                                    <button class="kb-pdf-back-btn" id="kbPdfBackBtn" title="返回对话窗口">← 返回对话</button>
+                                    <span id="kbPdfFileName">文档预览</span>
+                                </div>
+                                <div class="kb-pdf-right-section">
+                                    <button class="kb-pdf-close-btn" id="kbPdfCloseBtn" title="关闭文档">✕</button>
+                                </div>
+                            </div>
+                            <iframe class="kb-pdf-frame" id="kbPdfFrame" src=""></iframe>
+                        </div>
+                        
+                        <!-- 可拖拽调整条 -->
+                        <div class="kb-pdf-resizer" id="kbPdfResizer"></div>
+                        
+                        <!-- 文档对话区域 -->
+                        <div class="kb-doc-chat-area" id="kbDocChatArea">
+                            <div class="kb-doc-chat-header">
+                                <button class="kb-chat-toggle-btn" id="kbChatToggleBtn" title="折叠/展开对话区">◀</button>
+                                <span>💬 文档对话</span>
+                                <button class="kb-doc-clear-button" id="kbDocClearButton" title="清除对话">🗑️</button>
+                            </div>
+                            <div class="kb-doc-chat-messages" id="kbDocChatMessages">
+                                <div class="message ai">
+                                    <div class="message-bubble">
+                                        <div class="markdown-content">
+                                            已加载文档，您可以开始询问关于这个文档的任何问题！
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kb-doc-switches-bar">
+                                <div class="switch" id="kbDocSwitchNet">
+                                    <span>联网搜索</span>
+                                </div>
+                                <div class="switch" id="kbDocSwitchKb">
+                                    <span>知识库辅助</span>
+                                </div>
+                            </div>
+                            <div class="kb-doc-input-container">
+                                <input type="text" class="kb-doc-chat-input" id="kbDocChatInput" placeholder="询问关于这个文档的问题...">
+                                <button class="kb-doc-send-button" id="kbDocSendButton">发送</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧：任务栏 -->
+                    <div class="task-panel">
+                        <div class="panel-header">
+                            <h3>✅ 任务进度</h3>
+                            <button class="small-btn" id="refreshTasksBtn">刷新</button>
+                        </div>
+                        <!-- 大任务按钮区域 -->
+                        <div class="task-buttons-area">
+                            <button class="task-big-btn task-btn-orange" id="aiPptBtn">
+                                <div class="task-btn-icon">📊</div>
+                                <div class="task-btn-title">AI-PPT</div>
+                                <div class="task-btn-desc">生成演示文稿</div>
+                            </button>
+                            <button class="task-big-btn task-btn-blue" id="reportBtn">
+                                <div class="task-btn-icon">📝</div>
+                                <div class="task-btn-title">研究报告</div>
+                                <div class="task-btn-desc">生成研究报告</div>
+                            </button>
+                        </div>
+                        <!-- 任务列表 -->
+                        <div class="task-list" id="taskList">
+                            <!-- 任务项将动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- 悬浮摘要提示（挂载到 body 避免裁剪） -->
+    <div class="paper-tooltip" id="paperTooltip"></div>
+
+    <!-- 引入分离的JavaScript文件 -->
+    <!-- <script src="scripts.js"></script> -->
+    <script type="module" src="./scripts/main.js"></script>
+</body>
+</html>

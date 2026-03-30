@@ -1,0 +1,1215 @@
+/* 知识库模块样式 */
+
+/* 知识库集合页面 */
+.knowledge-base-view {
+    display: none; /* 默认隐藏 */
+    flex-direction: column;
+    height: 100%;
+    padding: 20px;
+    background: var(--bg);
+    overflow-y: auto;
+}
+
+.knowledge-base-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.knowledge-base-header h1 {
+    font-size: 28px;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.create-knowledge-btn {
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.create-knowledge-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* 知识库网格 */
+.knowledge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* 知识库卡片 */
+.knowledge-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.knowledge-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.knowledge-card:hover .card-actions {
+    opacity: 1;
+}
+
+.card-action-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.card-action-btn:hover {
+    background: rgba(220, 53, 69, 1);
+    transform: scale(1.1);
+}
+
+/* 空知识库状态 */
+.empty-knowledge-bases {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-knowledge-bases h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+}
+
+.empty-knowledge-bases p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* 空文档状态 */
+.empty-documents {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-documents-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-documents h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+
+.empty-documents p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* 知识库详情页面 */
+.knowledge-base-detail-view {
+    display: none; /* 默认隐藏 */
+    flex-direction: column;
+    height: 100%;
+    background: var(--bg-light);
+    overflow: hidden;
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 20px !important;
+    background: white;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+    height: 50px !important;
+    min-height: 50px !important;
+}
+
+.back-button {
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.kb-title-section {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.kb-logo {
+    font-size: 20px;
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+.detail-header h2 {
+    font-size: 18px;
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: 600;
+}
+
+/* 详情页面三栏布局 */
+
+/* 详情页面三栏布局 */
+.detail-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* 左侧文档列表面板 */
+.document-list-panel {
+    width: 300px;
+    background: white;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.panel-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.panel-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 全选复选框样式 */
+.select-all-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.select-all-checkbox:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.list-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.small-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.small-btn:hover {
+    background: #e9ecef;
+}
+
+.small-btn.primary {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.small-btn.primary:hover {
+    background: #5a67d8;
+}
+
+/* 上传进度样式 */
+.upload-progress {
+    padding: 12px;
+    background: #f0f4ff;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progress-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.progress-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e0e7ff;
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.document-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* 文档列表底部操作按钮 */
+.document-list-actions {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.document-list-actions .small-btn {
+    flex: 1;
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: var(--bg-light);
+    transition: background 0.2s ease;
+}
+
+.document-item:hover {
+    background: #e9ecef;
+}
+
+.doc-checkbox {
+    margin-right: 10px;
+}
+
+.doc-icon {
+    font-size: 20px;
+    margin-right: 12px;
+}
+
+.doc-info {
+    flex: 1;
+}
+
+.doc-title {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.doc-meta {
+    font-size: 12px;
+    color: #888;
+}
+
+.doc-action-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #888;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.doc-action-btn:hover {
+    color: var(--text-primary);
+}
+
+/* 中间聊天面板 */
+.chat-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    overflow: hidden;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.chat-switches {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: var(--bg-light);
+}
+
+.chat-input-container {
+    display: flex;
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-color);
+    background: white;
+    flex-shrink: 0;
+}
+
+.chat-input-container .chat-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 14px;
+}
+
+.chat-input-container .send-button {
+    margin-left: 10px;
+    padding: 12px 24px;
+}
+
+.chat-input-container .clear-button {
+    margin-left: 10px;
+    padding: 12px 16px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.chat-input-container .clear-button:hover {
+    background: #e0e0e0;
+    border-color: #ccc;
+}
+
+/* 右侧任务面板 */
+.task-panel {
+    width: 280px;
+    background: white;
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 任务大按钮区域 */
+.task-buttons-area {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.task-big-btn {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.task-big-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.task-big-btn:active {
+    transform: translateY(0);
+}
+
+/* AI-PPT 按钮 - 橙色 */
+.task-btn-orange {
+    background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
+    color: white;
+}
+
+.task-btn-orange:hover {
+    background: linear-gradient(135deg, #ff8a46 0%, #ff5b25 100%);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.35);
+}
+
+/* 研究报告按钮 - 蓝色 */
+.task-btn-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.task-btn-blue:hover {
+    background: linear-gradient(135deg, #566ed8 0%, #663a90 100%);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+}
+
+.task-btn-icon {
+    font-size: 28px;
+    margin-right: 14px;
+}
+
+.task-btn-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.task-btn-desc {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.task-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: var(--bg-light);
+}
+
+.task-icon {
+    font-size: 20px;
+    margin-right: 12px;
+}
+
+.task-info {
+    flex: 1;
+}
+
+.task-title {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.task-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 12px;
+    color: #666;
+    min-width: 30px;
+}
+
+/* 开关样式复用 */
+.switch {
+    padding: 6px 12px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.switch.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* 响应式调整 */
+@media (max-width: 1024px) {
+    .detail-layout {
+        flex-direction: column;
+    }
+    
+    .document-list-panel,
+    .task-panel {
+        width: 100%;
+        border-right: none;
+        border-left: none;
+        border-bottom: 1px solid var(--border-color);
+        max-height: 300px;
+    }
+    
+    .chat-panel {
+        order: -1; /* 聊天面板在最上面 */
+    }
+}
+
+/* 返回按钮样式 */
+.back-button {
+    padding: 8px 16px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.back-button:hover {
+    background: #f8fafc;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* AI-PPT 弹窗样式 */
+.ai-ppt-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ai-ppt-modal-overlay.show {
+    opacity: 1;
+}
+
+.ai-ppt-modal {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.ai-ppt-modal-overlay.show .ai-ppt-modal {
+    transform: scale(1);
+}
+
+.ai-ppt-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.ai-ppt-modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ai-ppt-modal-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--bg-light);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.ai-ppt-modal-close:hover {
+    background: #e9ecef;
+    color: var(--text-primary);
+}
+
+.ai-ppt-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.ai-ppt-selected-docs {
+    margin-bottom: 24px;
+}
+
+.ai-ppt-selected-docs-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.ai-ppt-doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 12px;
+    background: var(--bg-light);
+    border-radius: 8px;
+}
+
+.ai-ppt-doc-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.ai-ppt-doc-icon {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.ai-ppt-doc-info {
+    flex: 1;
+}
+
+.ai-ppt-doc-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.ai-ppt-doc-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.ai-ppt-empty-docs {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.ai-ppt-input-section {
+    margin-bottom: 24px;
+}
+
+.ai-ppt-input-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.ai-ppt-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.2s ease;
+}
+
+.ai-ppt-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.ai-ppt-input-placeholder {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.ai-ppt-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.ai-ppt-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ai-ppt-btn-cancel {
+    background: var(--bg-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.ai-ppt-btn-cancel:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.ai-ppt-btn-confirm {
+    background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
+    color: white;
+}
+
+.ai-ppt-btn-confirm:hover {
+    background: linear-gradient(135deg, #ff8a46 0%, #ff5b25 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.ai-ppt-btn-confirm:active {
+    transform: translateY(0);
+}
+
+/* 知识库PDF阅读器样式 */
+.kb-pdf-viewer {
+    flex: 1;
+    display: flex;
+    background: white;
+    overflow: hidden;
+    position: relative;
+}
+
+.kb-pdf-display-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: flex 0.3s ease;
+}
+
+.kb-pdf-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: white;
+    flex-shrink: 0;
+}
+
+.kb-pdf-left-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.kb-pdf-back-btn {
+    padding: 6px 12px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.kb-pdf-back-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.kb-pdf-right-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.kb-pdf-close-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--bg-light);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.kb-pdf-close-btn:hover {
+    background: #e9ecef;
+    color: var(--text-primary);
+}
+
+.kb-pdf-frame {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: #f5f5f5;
+}
+
+.kb-pdf-resizer {
+    width: 4px;
+    background: var(--border-color);
+    cursor: col-resize;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+
+.kb-pdf-resizer:hover {
+    background: var(--primary-color);
+}
+
+.kb-doc-chat-area {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-left: 1px solid var(--border-color);
+    transition: width 0.3s ease;
+}
+
+.kb-doc-chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-light);
+    flex-shrink: 0;
+}
+
+.kb-doc-chat-header > span {
+    flex: 1;
+}
+
+.kb-doc-clear-button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--bg-light);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.kb-doc-clear-button:hover {
+    background: #e9ecef;
+    color: var(--text-primary);
+}
+
+.kb-chat-toggle-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-right: 8px;
+    transition: all 0.2s ease;
+}
+
+.kb-chat-toggle-btn:hover {
+    color: var(--text-primary);
+}
+
+.kb-doc-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: var(--bg-light);
+}
+
+.kb-doc-switches-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border-top: 1px solid var(--border-color);
+    background: white;
+    flex-shrink: 0;
+}
+
+.kb-doc-input-container {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid var(--border-color);
+    background: white;
+    flex-shrink: 0;
+    gap: 8px;
+}
+
+.kb-doc-chat-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 14px;
+}
+
+.kb-doc-send-button {
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.kb-doc-send-button:hover {
+    opacity: 0.9;
+}
+
+/* 任务面板折叠状态 */
+.task-panel.collapsed {
+    width: 0;
+    overflow: hidden;
+    border-left: none;
+    transition: width 0.3s ease;
+}
+
+.task-panel.collapsed .panel-header,
+.task-panel.collapsed .task-buttons-area,
+.task-panel.collapsed .task-list {
+    display: none;
+}
+
+/* 文档项可点击样式 */
+.document-item {
+    cursor: pointer;
+}
+
+.document-item:hover {
+    background: #e9ecef;
+}
+
+.document-item .doc-checkbox,
+.document-item .doc-action-btn {
+    pointer-events: auto;
+}
+
+.document-item .doc-info {
+    pointer-events: none;
+}
+
+/* ==================== 任务项样式优化 ==================== */
+
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--bg-light);
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.task-item:hover {
+    background: #e9ecef;
+    transform: translateX(2px);
+}
+
+.task-item.task-processing {
+    border-left-color: #ffc107;
+    background: #fff8e1;
+}
+
+.task-item.task-processing:hover {
+    background: #ffecb3;
+}
+
+.task-item.task-completed {
+    border-left-color: #28a745;
+    background: #e8f5e9;
+}
+
+.task-item.task-completed:hover {
+    background: #c8e6c9;
+}
+
+.task-item.task-failed {
+    border-left-color: #dc3545;
+    background: #ffebee;
+}
+
+.task-item.task-failed:hover {
+    background: #ffcdd2;
+}
+
+.task-icon {
+    font-size: 20px;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.task-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-title {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-meta {
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+.task-action-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.task-action-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.task-action-btn.download-btn:hover {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.task-action-btn.delete-btn:hover {
+    background: #ffebee;
+    color: #dc3545;
+}
