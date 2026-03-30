@@ -4,7 +4,7 @@
 
 import queue
 import threading
-from threading import Semaphore, Thread
+from threading import Thread
 import uuid
 from typing import Dict, Callable, Any
 
@@ -33,14 +33,34 @@ class BackgroundTaskManager:
         # 任务状态文件路径
         self.tasks_file = self.user_paths['memory_path'] / 'tasks.json'
         
-        # 并发控制信号量
-        self.parse_semaphore = Semaphore(Config.PARSE_SEMAPHORE)
+        # 并发控制 - 使用线程锁而非信号量，避免资源追踪器警告
+        self._parse_lock = threading.Lock()
+        self._active_tasks = 0
+        self._max_concurrent = Config.PARSE_SEMAPHORE
         
         # 加载已有任务状态
         self._load_tasks()
         
         # 启动工作线程
         self._start_workers()
+    
+    def _acquire_slot(self, timeout=1):
+        """获取执行槽位（替代信号量）"""
+        import time
+        start = time.time()
+        while True:
+            with self._parse_lock:
+                if self._active_tasks < self._max_concurrent:
+                    self._active_tasks += 1
+                    return True
+            if time.time() - start > timeout:
+                return False
+            time.sleep(0.01)
+    
+    def _release_slot(self):
+        """释放执行槽位"""
+        with self._parse_lock:
+            self._active_tasks = max(0, self._active_tasks - 1)
     
     def _start_workers(self):
         """启动工作线程"""
@@ -67,28 +87,35 @@ class BackgroundTaskManager:
                 self.parse_tasks[task_id] = {"status": "processing", "message": "正在解析论文..."}
                 self._save_tasks()
                 
-                # 使用信号量控制并发
-                with self.parse_semaphore:
-                    try:
-                        print(f"🔄 开始解析任务 {task_id}: {file_id}")
-                        
-                        # 执行解析
-                        result = parse_pdf_to_metadata(pdf_path, file_id=file_id, output_dir=self.user_paths['parsed_papers_path'], user_id=self.user_id)
-                        
-                        if result.get("status") == "success":
-                            self.parse_tasks[task_id] = {"status": "completed", "message": "解析成功"}
-                            print(f"✅ 解析任务 {task_id} 完成")
-                        else:
-                            error_msg = result.get("message", "未知错误")
-                            self.parse_tasks[task_id] = {"status": "failed", "message": f"解析失败: {error_msg}"}
-                            print(f"❌ 解析任务 {task_id} 失败: {error_msg}")
-                            
-                    except Exception as e:
-                        self.parse_tasks[task_id] = {"status": "failed", "message": f"解析异常: {str(e)}"}
-                        print(f"💥 解析任务 {task_id} 异常: {e}")
-                    
-                    # 保存任务状态
+                # 使用槽位控制并发（替代信号量）
+                if not self._acquire_slot(timeout=30):
+                    self.parse_tasks[task_id] = {"status": "failed", "message": "等待执行超时"}
                     self._save_tasks()
+                    self.parse_queue.task_done()
+                    continue
+                    
+                try:
+                    print(f"🔄 开始解析任务 {task_id}: {file_id}")
+                    
+                    # 执行解析
+                    result = parse_pdf_to_metadata(pdf_path, file_id=file_id, output_dir=self.user_paths['parsed_papers_path'], user_id=self.user_id)
+                    
+                    if result.get("status") == "success":
+                        self.parse_tasks[task_id] = {"status": "completed", "message": "解析成功"}
+                        print(f"✅ 解析任务 {task_id} 完成")
+                    else:
+                        error_msg = result.get("message", "未知错误")
+                        self.parse_tasks[task_id] = {"status": "failed", "message": f"解析失败: {error_msg}"}
+                        print(f"❌ 解析任务 {task_id} 失败: {error_msg}")
+                        
+                except Exception as e:
+                    self.parse_tasks[task_id] = {"status": "failed", "message": f"解析异常: {str(e)}"}
+                    print(f"💥 解析任务 {task_id} 异常: {e}")
+                finally:
+                    self._release_slot()
+                    
+                # 保存任务状态
+                self._save_tasks()
 
             except Exception as e:
                 print(f"🔥 解析工作线程异常: {e}")
@@ -585,14 +612,34 @@ class AIGenerationTaskManager:
         self.generation_results_dir = self.user_paths['memory_path'] / 'tasks'
         self.generation_results_dir.mkdir(parents=True, exist_ok=True)
 
-        # 并发控制信号量
-        self.generation_semaphore = Semaphore(2)  # 最多同时处理2个生成任务
+        # 并发控制 - 使用线程锁而非信号量，避免资源追踪器警告
+        self._generation_lock = threading.Lock()
+        self._active_generation_tasks = 0
+        self._max_concurrent_generation = 2  # 最多同时处理2个生成任务
 
         # 加载已有任务状态
         self._load_tasks()
 
         # 启动工作线程
         self._start_workers()
+    
+    def _acquire_generation_slot(self, timeout=1):
+        """获取生成任务执行槽位（替代信号量）"""
+        import time
+        start = time.time()
+        while True:
+            with self._generation_lock:
+                if self._active_generation_tasks < self._max_concurrent_generation:
+                    self._active_generation_tasks += 1
+                    return True
+            if time.time() - start > timeout:
+                return False
+            time.sleep(0.01)
+    
+    def _release_generation_slot(self):
+        """释放生成任务执行槽位"""
+        with self._generation_lock:
+            self._active_generation_tasks = max(0, self._active_generation_tasks - 1)
 
     def _start_workers(self):
         """启动 AI 生成工作线程"""
@@ -623,48 +670,59 @@ class AIGenerationTaskManager:
                 }
                 self._save_tasks()
 
-                # 使用信号量控制并发
-                with self.generation_semaphore:
-                    try:
-                        print(f"🔄 开始 AI 生成任务 {task_id}: {generation_type}")
+                # 使用槽位控制并发（替代信号量）
+                if not self._acquire_generation_slot(timeout=30):
+                    self.generation_tasks[task_id] = {
+                        "status": "failed",
+                        "progress": 0,
+                        "message": "等待执行超时"
+                    }
+                    self._save_tasks()
+                    self.generation_queue.task_done()
+                    continue
 
-                        # 执行生成
-                        result = self._execute_generation(
-                            task_id=task_id,
-                            generation_type=generation_type,
-                            query=query,
-                            kb_id=kb_id,
-                            file_ids=file_ids
-                        )
+                try:
+                    print(f"🔄 开始 AI 生成任务 {task_id}: {generation_type}")
 
-                        if result.get("status") == "success":
-                            self.generation_tasks[task_id] = {
-                                "status": "completed",
-                                "progress": 100,
-                                "message": f"{generation_type.upper()}生成成功",
-                                "result_path": result.get("result_path"),
-                                "metadata": result.get("metadata", {})
-                            }
-                            print(f"✅ AI 生成任务 {task_id} 完成")
-                        else:
-                            error_msg = result.get("message", "未知错误")
-                            self.generation_tasks[task_id] = {
-                                "status": "failed",
-                                "progress": 0,
-                                "message": f"{generation_type.upper()}生成失败: {error_msg}"
-                            }
-                            print(f"❌ AI 生成任务 {task_id} 失败: {error_msg}")
+                    # 执行生成
+                    result = self._execute_generation(
+                        task_id=task_id,
+                        generation_type=generation_type,
+                        query=query,
+                        kb_id=kb_id,
+                        file_ids=file_ids
+                    )
 
-                    except Exception as e:
+                    if result.get("status") == "success":
+                        self.generation_tasks[task_id] = {
+                            "status": "completed",
+                            "progress": 100,
+                            "message": f"{generation_type.upper()}生成成功",
+                            "result_path": result.get("result_path"),
+                            "metadata": result.get("metadata", {})
+                        }
+                        print(f"✅ AI 生成任务 {task_id} 完成")
+                    else:
+                        error_msg = result.get("message", "未知错误")
                         self.generation_tasks[task_id] = {
                             "status": "failed",
                             "progress": 0,
-                            "message": f"{generation_type.upper()}生成异常: {str(e)}"
+                            "message": f"{generation_type.upper()}生成失败: {error_msg}"
                         }
-                        print(f"💥 AI 生成任务 {task_id} 异常: {e}")
+                        print(f"❌ AI 生成任务 {task_id} 失败: {error_msg}")
 
-                    # 保存任务状态
-                    self._save_tasks()
+                except Exception as e:
+                    self.generation_tasks[task_id] = {
+                        "status": "failed",
+                        "progress": 0,
+                        "message": f"{generation_type.upper()}生成异常: {str(e)}"
+                    }
+                    print(f"💥 AI 生成任务 {task_id} 异常: {e}")
+                finally:
+                    self._release_generation_slot()
+
+                # 保存任务状态
+                self._save_tasks()
 
             except Exception as e:
                 print(f"🔥 AI 生成工作线程异常: {e}")
